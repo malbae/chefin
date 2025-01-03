@@ -65,12 +65,26 @@ class RecipeCard extends StatelessWidget {
           // Image
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              imageUrl,
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
+            child: imageUrl.startsWith('http') || imageUrl.startsWith('https')
+                ? Image.network(
+                    imageUrl,
+                    width: 180,
+                    height: 180,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.broken_image,
+                        color: Colors.grey,
+                        size: 180,
+                      );
+                    },
+                  )
+                : Image.asset(
+                    imageUrl,
+                    width: 180,
+                    height: 180,
+                    fit: BoxFit.cover,
+                  ),
           ),
           SizedBox(height: 8),
 
@@ -133,8 +147,7 @@ class RecipeCardExample extends StatelessWidget {
       body: Center(
         child: RecipeCard(
           title: "Banana Cake",
-          imageUrl:
-              "https://images.unsplash.com/photo-1556742042-3c52d6e88c62", // Example URL
+          imageUrl: "assets/images/bananacake.jpg", // Use your asset here
           rating: 4.3,
         ),
       ),

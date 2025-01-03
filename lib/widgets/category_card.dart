@@ -35,12 +35,19 @@ class CategoryCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ClipOval(
-              child: Image.network(
-                imageUrl,
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-              ),
+              child: imageUrl.startsWith('assets/')
+                  ? Image.asset(
+                      imageUrl,
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.network(
+                      imageUrl,
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                    ),
             ),
             SizedBox(height: 15),
             Text(

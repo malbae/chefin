@@ -9,12 +9,61 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isPasswordVisible = false; // Tracks the visibility of the password
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  // Mock function for user authentication
+  Future<void> _authenticateUser(String email, String password) async {
+    // Replace this with your real authentication logic
+    if (email == "test@example.com" && password == "password123") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      _showErrorDialog("Invalid email or password");
+    }
+  }
+
+  // Show error dialog
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Login Error"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Input validation
+  bool _validateInputs() {
+    if (_emailController.text.isEmpty) {
+      _showErrorDialog("Email cannot be empty");
+      return false;
+    }
+    if (!_emailController.text.contains("@")) {
+      _showErrorDialog("Please enter a valid email");
+      return false;
+    }
+    if (_passwordController.text.length < 8) {
+      _showErrorDialog("Password must be at least 8 characters");
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200], // Light grey background
+      backgroundColor: Colors.grey[200],
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -65,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 8),
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   prefixIcon:
                       Icon(Icons.email, color: Color.fromRGBO(54, 129, 74, 1)),
@@ -86,12 +136,13 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Choose a password',
+                  'Your password',
                   style: TextStyle(color: Colors.grey[700]),
                 ),
               ),
               SizedBox(height: 8),
               TextField(
+                controller: _passwordController,
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   prefixIcon:
@@ -128,10 +179,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    );
+                    if (_validateInputs()) {
+                      _authenticateUser(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromRGBO(54, 129, 74, 1),
@@ -144,65 +197,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     'Continue',
                     style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // "or" Divider
-              Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.grey[400])),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('or', style: TextStyle(color: Colors.grey)),
-                  ),
-                  Expanded(child: Divider(color: Colors.grey[400])),
-                ],
-              ),
-              SizedBox(height: 20),
-
-              // Sign in with Google
-              Container(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(color: Colors.grey[300]!),
-                    ),
-                  ),
-                  icon: Icon(Icons.g_mobiledata,
-                      color: Color.fromRGBO(54, 129, 74, 1)),
-                  label: Text(
-                    'Sign in with Google',
-                    style: TextStyle(color: Color.fromRGBO(54, 129, 74, 1)),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-
-              // Sign in with Apple
-              Container(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(color: Colors.grey[300]!),
-                    ),
-                  ),
-                  icon:
-                      Icon(Icons.apple, color: Color.fromRGBO(54, 129, 74, 1)),
-                  label: Text(
-                    'Sign in with Apple',
-                    style: TextStyle(color: Color.fromRGBO(54, 129, 74, 1)),
                   ),
                 ),
               ),

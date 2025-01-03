@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
-import 'screens/login_screen.dart'; // Ensure this points to your login screen
+import 'screens/login_screen.dart'; // Pastikan ini mengarah ke lokasi yang benar
 
 void main() {
-  runApp(ChefinApp());
+  runApp(const ChefinApp());
 }
 
 class ChefinApp extends StatelessWidget {
+  const ChefinApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // Menghilangkan debug banner
       title: 'CHEFIN',
       theme: ThemeData(
-        fontFamily: 'Coolvetica', // Set the default font to Coolvetica
-        primarySwatch: Colors.green,
+        fontFamily: 'Coolvetica', // Default font diatur ke Coolvetica
+        primarySwatch: Colors.green, // Warna utama aplikasi
       ),
-      home: LoginScreen(), // Set to your initial screen (like LoginScreen)
+      home: LoginScreen(), // Pastikan LoginScreen sudah diimplementasi
     );
   }
 }

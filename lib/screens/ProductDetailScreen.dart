@@ -1,10 +1,15 @@
+import 'package:chefin/screens/bookmark.dart';
+import 'package:chefin/screens/home_screen.dart';
+import 'package:chefin/screens/profile.dart';
+import 'package:chefin/screens/upload_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double rating;
-  final String videoUrl; // Add videoUrl parameter
+  final String videoUrl;
 
   ProductDetailScreen({
     required this.title,
@@ -50,7 +55,7 @@ class ProductDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
 
@@ -71,7 +76,7 @@ class ProductDetailScreen extends StatelessWidget {
             SizedBox(height: 8),
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
+              child: Image.asset(
                 imageUrl,
                 width: 180,
                 height: 180,
@@ -180,19 +185,45 @@ class ProductDetailScreen extends StatelessWidget {
     );
   }
 
-  BottomNavigationBar _buildBottomNavigationBar() {
+  Widget _buildBottomNavigationBar(BuildContext context) {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.chat), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.add), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
       ],
-      selectedItemColor: Colors.green,
+      selectedItemColor: Color.fromRGBO(54, 129, 74, 1),
       unselectedItemColor: Colors.grey,
       showSelectedLabels: false,
       showUnselectedLabels: false,
+      onTap: (index) {
+        if (index == 0) {
+          // Navigasi ke halaman Home
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else if (index == 1) {
+          // Navigasi ke halaman Upload
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UploadScreen()),
+          );
+        } else if (index == 2) {
+          // Navigasi ke halaman Bookmark
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BookmarkScreen()),
+          );
+        } else if (index == 3) {
+          // Navigasi ke halaman Profile
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfilePage()),
+          );
+        }
+      },
     );
   }
 
@@ -259,13 +290,32 @@ class VideoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final videoId = YoutubePlayer.convertUrlToId(videoUrl);
+    if (videoId == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Invalid Video"),
+        ),
+        body: Center(
+          child: Text(
+            "Invalid YouTube URL",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Watch Video"),
         backgroundColor: Colors.green,
       ),
-      body: Center(
-        child: Text("Video playing from: $videoUrl"), // Placeholder for video
+      body: YoutubePlayer(
+        controller: YoutubePlayerController(
+          initialVideoId: videoId,
+          flags: YoutubePlayerFlags(autoPlay: true),
+        ),
+        showVideoProgressIndicator: true,
       ),
     );
   }

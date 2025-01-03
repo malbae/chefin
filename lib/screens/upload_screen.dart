@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:chefin/screens/bookmark.dart';
+import 'package:chefin/screens/home_screen.dart';
+import 'package:chefin/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -99,10 +102,9 @@ class _UploadScreenState extends State<UploadScreen> {
       ),
       body: _currentStep == 1 ? _buildStepOne() : _buildStepTwo(),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
+        currentIndex: 1, // Set the current index to 1 for Upload Screen
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
@@ -112,8 +114,27 @@ class _UploadScreenState extends State<UploadScreen> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         onTap: (index) {
-          if (index != 2) {
-            Navigator.pop(context);
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              ),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BookmarkScreen(),
+              ),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(),
+              ),
+            );
           }
         },
       ),
